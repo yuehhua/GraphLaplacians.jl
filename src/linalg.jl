@@ -14,7 +14,7 @@ julia> using GraphLaplacians
 
 julia> m = [0 1 1; 1 0 0; 1 0 0];
 
-julia> GeometricFlux.degrees(m)
+julia> GraphLaplacians.degrees(m)
 3-element Array{Int64,1}:
  2
  1
@@ -43,7 +43,7 @@ julia> using GraphLaplacians
 
 julia> m = [0 1 1; 1 0 0; 1 0 0];
 
-julia> GeometricFlux.degree_matrix(m)
+julia> GraphLaplacians.degree_matrix(m)
 3×3 SparseArrays.SparseMatrixCSC{Int64,Int64} with 3 stored entries:
   [1, 1]  =  2
   [2, 2]  =  1
