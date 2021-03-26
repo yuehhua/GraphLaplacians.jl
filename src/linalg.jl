@@ -15,7 +15,7 @@ julia> using GraphLaplacians
 julia> m = [0 1 1; 1 0 0; 1 0 0];
 
 julia> GraphLaplacians.degrees(m)
-3-element Array{Int64,1}:
+3-element Vector{Int64}:
  2
  1
  1
@@ -44,10 +44,10 @@ julia> using GraphLaplacians
 julia> m = [0 1 1; 1 0 0; 1 0 0];
 
 julia> GraphLaplacians.degree_matrix(m)
-3×3 SparseArrays.SparseMatrixCSC{Int64,Int64} with 3 stored entries:
-  [1, 1]  =  2
-  [2, 2]  =  1
-  [3, 3]  =  1
+3×3 SparseArrays.SparseMatrixCSC{Int64, Int64} with 3 stored entries:
+ 2  ⋅  ⋅
+ ⋅  1  ⋅
+ ⋅  ⋅  1
 ```
 """
 function degree_matrix(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
