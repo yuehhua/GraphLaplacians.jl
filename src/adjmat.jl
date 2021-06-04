@@ -1,14 +1,24 @@
+Zygote.@nograd issymmetric
+
+Zygote.@nograd function adjacency_matrix(adj::AbstractMatrix, T::DataType=eltype(adj))
+    m, n = size(adj)
+    (m == n) || throw(DimensionMismatch("adjacency matrix is not a square matrix: ($m, $n)"))
+    T.(adj)
+end
+
 """
-    degrees(g[, T; dir=:out])
+    degrees(g[, T]; dir=:out)
 
 Degree of each vertex. Return a vector which contains the degree of each vertex in graph `g`.
 
 # Arguments
+
 - `g`: should be a adjacency matrix, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
 
 # Examples
+
 ```jldoctest
 julia> using GraphLaplacians
 
@@ -22,22 +32,41 @@ julia> GraphLaplacians.degrees(m)
 
 ```
 """
-function degrees(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
-    _degrees(T.(adj), dir)
+function degrees(adj::AbstractMatrix; dir::Symbol=:out)
+    if issymmetric(adj)
+        d = vec(sum(adj, dims=1))
+    else
+        if dir == :out
+            d = vec(sum(adj, dims=1))
+        elseif dir == :in
+            d = vec(sum(adj, dims=2))
+        elseif dir == :both
+            d = vec(sum(adj, dims=1)) + vec(sum(adj, dims=2))
+        else
+            throw(DomainError(dir, "invalid argument, only accept :in, :out and :both"))
+        end
+    end
+    d
 end
 
+degrees(adj::AbstractMatrix, T::DataType; dir::Symbol=:out) = degrees(T.(adj); dir=dir)
+
+Zygote.@nograd degrees
+
 """
-    degree_matrix(g[, T; dir=:out])
+    degree_matrix(g[, T]; dir=:out)
 
 Degree matrix of graph `g`. Return a matrix which contains degrees of each vertex in its diagonal.
 The values other than diagonal are zeros.
 
 # Arguments
+
 - `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
 
 # Examples
+
 ```jldoctest
 julia> using GraphLaplacians
 
@@ -56,12 +85,13 @@ function degree_matrix(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol
 end
 
 """
-    inv_sqrt_degree_matrix(g[, T; dir=:out])
+    inv_sqrt_degree_matrix(g[, T]; dir=:out)
 
 Inverse squared degree matrix of graph `g`. Return a matrix which contains inverse squared degrees of each vertex in its diagonal.
 The values other than diagonal are zeros.
 
 # Arguments
+
 - `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
@@ -72,11 +102,12 @@ function inv_sqrt_degree_matrix(adj::AbstractMatrix, T::DataType=eltype(adj); di
 end
 
 """
-    laplacian_matrix(g[, T; dir=:out])
+    laplacian_matrix(g[, T]; dir=:out)
 
 Laplacian matrix of graph `g`.
 
 # Arguments
+
 - `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
@@ -86,27 +117,32 @@ function laplacian_matrix(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Sym
 end
 
 """
-    normalized_laplacian(g[, T; selfloop=false])
+    normalized_laplacian(g[, T]; selfloop=false)
 
 Normalized Laplacian matrix of graph `g`.
 
 # Arguments
+
 - `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `selfloop`: adding self loop while calculating the matrix (optional).
 """
 function normalized_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); selfloop::Bool=false)
     selfloop && (adj += I)
-    _normalized_laplacian(adj, T)
+    inv_sqrtD = inv_sqrt_degree_matrix(adj, T, dir=:both)
+    T.(I - inv_sqrtD * adj * inv_sqrtD)
 end
 
+Zygote.@nograd normalized_laplacian
+
 @doc raw"""
-    scaled_laplacian(adj::AbstractMatrix[, T::DataType])
+    scaled_laplacian(g[, T])
 
 Scaled Laplacien matrix of graph `g`,
 defined as ``\hat{L} = \frac{2}{\lambda_{max}} L - I`` where ``L`` is the normalized Laplacian matrix.
 
 # Arguments
+
 - `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 """

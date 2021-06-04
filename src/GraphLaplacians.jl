@@ -14,9 +14,8 @@ export
     normalized_laplacian,
     scaled_laplacian
 
-include("linalg.jl")
+include("adjmat.jl")
+include("adjlist.jl")
 include("graph.jl")
-include("metagraphs.jl")
-include("grad.jl")
 
 end
