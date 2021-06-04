@@ -1,4 +1,4 @@
-@testset "linalg" begin
+@testset "adjmat" begin
     @testset "symmetric" begin
         adj = [0 1 0 1;
                1 0 1 0;

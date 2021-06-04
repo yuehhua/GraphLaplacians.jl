@@ -12,7 +12,9 @@ export
     degree_matrix,
     laplacian_matrix,
     normalized_laplacian,
-    scaled_laplacian
+    scaled_laplacian,
+    random_walk_laplacian,
+    signless_laplacian
 
 include("adjmat.jl")
 include("adjlist.jl")

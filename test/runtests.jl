@@ -6,7 +6,7 @@ using Zygote
 using Test
 
 tests = [
-    "linalg",
+    "adjmat",
     "simplegraphs",
     "weightedgraphs",
     "metagraphs",

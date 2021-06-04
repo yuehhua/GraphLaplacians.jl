@@ -29,7 +29,6 @@ julia> GraphLaplacians.degrees(m)
  2
  1
  1
-
 ```
 """
 function degrees(adj::AbstractMatrix; dir::Symbol=:out)
@@ -73,7 +72,7 @@ julia> using GraphLaplacians
 julia> m = [0 1 1; 1 0 0; 1 0 0];
 
 julia> GraphLaplacians.degree_matrix(m)
-3×3 SparseArrays.SparseMatrixCSC{Int64, Int64} with 3 stored entries:
+3×3 Diagonal{Int64, Vector{Int64}}:
  2  ⋅  ⋅
  ⋅  1  ⋅
  ⋅  ⋅  1
@@ -81,7 +80,7 @@ julia> GraphLaplacians.degree_matrix(m)
 """
 function degree_matrix(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
     d = degrees(adj, T, dir=dir)
-    return SparseMatrixCSC(T.(diagm(0=>d)))
+    return Diagonal(T.(d))
 end
 
 """
@@ -150,4 +149,13 @@ function scaled_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj))
     @assert issymmetric(adj) "scaled_laplacian only works with symmetric matrices"
     E = eigen(Symmetric(adj)).values
     T(2. / maximum(E)) * normalized_laplacian(adj, T) - I
+end
+
+function random_walk_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
+    P = inv(degree_matrix(adj, T, dir=dir)) * adj
+    SparseMatrixCSC(I - P)
+end
+
+function signless_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
+    degree_matrix(adj, T, dir=dir) + SparseMatrixCSC(T.(adj))
 end
