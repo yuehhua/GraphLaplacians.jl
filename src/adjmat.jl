@@ -152,8 +152,11 @@ function scaled_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj))
 end
 
 function random_walk_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
-    P = inv(degree_matrix(adj, T, dir=dir)) * adj
-    SparseMatrixCSC(I - P)
+    d = degrees(adj, dir=dir)
+    inv_d = 1 ./ d
+    replace!(inv_d, typemax(float(T)) => zero(float(T)))  # avoid degree to be zero
+    P = Diagonal(inv_d) * adj
+    SparseMatrixCSC(T.(I - P))
 end
 
 function signless_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
