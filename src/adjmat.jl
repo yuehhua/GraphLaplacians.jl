@@ -151,6 +151,17 @@ function scaled_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj))
     T(2. / maximum(E)) * normalized_laplacian(adj, T) - I
 end
 
+"""
+    random_walk_laplacian(g[, T]; dir=:out)
+
+Random walk normalized Laplacian matrix of graph `g`.
+
+# Arguments
+
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
+- `T`: result element type of degree vector; default is the element type of `g` (optional).
+- `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
+"""
 function random_walk_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
     d = degrees(adj, dir=dir)
     inv_d = 1 ./ d
@@ -159,6 +170,17 @@ function random_walk_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir
     SparseMatrixCSC(T.(I - P))
 end
 
+"""
+    signless_laplacian(g[, T]; dir=:out)
+
+Signless Laplacian matrix of graph `g`.
+
+# Arguments
+
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
+- `T`: result element type of degree vector; default is the element type of `g` (optional).
+- `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
+"""
 function signless_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
     degree_matrix(adj, T, dir=dir) + SparseMatrixCSC(T.(adj))
 end
