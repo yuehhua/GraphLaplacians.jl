@@ -7,9 +7,7 @@ using Test
 
 tests = [
     "adjmat",
-    "simplegraphs",
-    "weightedgraphs",
-    "metagraphs",
+    "graphs",
 ]
 
 @testset "GraphLaplacians.jl" begin

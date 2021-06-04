@@ -18,6 +18,6 @@ export
 
 include("adjmat.jl")
 include("adjlist.jl")
-include("graph.jl")
+include("graphs.jl")
 
 end
