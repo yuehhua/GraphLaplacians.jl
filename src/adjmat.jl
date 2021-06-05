@@ -72,7 +72,7 @@ julia> using GraphLaplacians
 julia> m = [0 1 1; 1 0 0; 1 0 0];
 
 julia> GraphLaplacians.degree_matrix(m)
-3×3 Diagonal{Int64, Vector{Int64}}:
+3×3 LinearAlgebra.Diagonal{Int64, Vector{Int64}}:
  2  ⋅  ⋅
  ⋅  1  ⋅
  ⋅  ⋅  1
