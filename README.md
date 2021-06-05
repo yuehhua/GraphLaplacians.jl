@@ -14,3 +14,5 @@ This package provides calculating for Laplacian of a graph and related linear al
 * `laplacian_matrix`
 * `normalized_laplacian`
 * `scaled_laplacian`
+* `random_walk_laplacian`
+* `signless_laplacian`

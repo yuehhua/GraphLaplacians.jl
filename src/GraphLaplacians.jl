@@ -12,11 +12,12 @@ export
     degree_matrix,
     laplacian_matrix,
     normalized_laplacian,
-    scaled_laplacian
+    scaled_laplacian,
+    random_walk_laplacian,
+    signless_laplacian
 
-include("linalg.jl")
-include("graph.jl")
-include("metagraphs.jl")
-include("grad.jl")
+include("adjmat.jl")
+include("adjlist.jl")
+include("graphs.jl")
 
 end
