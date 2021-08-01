@@ -1,7 +1,7 @@
 name = "GraphLaplacians"
 uuid = "a1251efa-393a-423f-9d7b-faaecba535dc"
 authors = ["Yueh-Hua Tu <a504082002@gmail.com>"]
-version = "0.1.3"
+version = "0.1.4"
 
 [deps]
 ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"

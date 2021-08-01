@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4]
+
+- Support of sparse array from SparseArrays
+
 ## [0.1.3]
 
 - add random_walk_laplacian and signless_laplacian
