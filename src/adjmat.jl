@@ -1,6 +1,4 @@
-Zygote.@nograd issymmetric
-
-Zygote.@nograd function adjacency_matrix(adj::AbstractMatrix, T::DataType=eltype(adj))
+function adjacency_matrix(adj::AbstractMatrix, T::DataType=eltype(adj))
     m, n = size(adj)
     (m == n) || throw(DimensionMismatch("adjacency matrix is not a square matrix: ($m, $n)"))
     T.(adj)
@@ -49,8 +47,6 @@ function degrees(adj::AbstractMatrix; dir::Symbol=:out)
 end
 
 degrees(adj::AbstractMatrix, T::DataType; dir::Symbol=:out) = degrees(T.(adj); dir=dir)
-
-Zygote.@nograd degrees
 
 """
     degree_matrix(g[, T]; dir=:out)
@@ -131,8 +127,6 @@ function normalized_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); self
     inv_sqrtD = inv_sqrt_degree_matrix(adj, T, dir=:both)
     T.(I - inv_sqrtD * adj * inv_sqrtD)
 end
-
-Zygote.@nograd normalized_laplacian
 
 @doc raw"""
     scaled_laplacian(g[, T])
