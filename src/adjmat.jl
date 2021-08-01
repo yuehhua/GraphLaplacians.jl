@@ -1,6 +1,4 @@
-Zygote.@nograd issymmetric
-
-Zygote.@nograd function adjacency_matrix(adj::AbstractMatrix, T::DataType=eltype(adj))
+function adjacency_matrix(adj::AbstractMatrix, T::DataType=eltype(adj))
     m, n = size(adj)
     (m == n) || throw(DimensionMismatch("adjacency matrix is not a square matrix: ($m, $n)"))
     T.(adj)
@@ -49,8 +47,6 @@ function degrees(adj::AbstractMatrix; dir::Symbol=:out)
 end
 
 degrees(adj::AbstractMatrix, T::DataType; dir::Symbol=:out) = degrees(T.(adj); dir=dir)
-
-Zygote.@nograd degrees
 
 """
     degree_matrix(g[, T]; dir=:out)
@@ -132,8 +128,6 @@ function normalized_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); self
     T.(I - inv_sqrtD * adj * inv_sqrtD)
 end
 
-Zygote.@nograd normalized_laplacian
-
 @doc raw"""
     scaled_laplacian(g[, T])
 
@@ -147,7 +141,7 @@ defined as ``\hat{L} = \frac{2}{\lambda_{max}} L - I`` where ``L`` is the normal
 """
 function scaled_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj))
     @assert issymmetric(adj) "scaled_laplacian only works with symmetric matrices"
-    E = eigen(Symmetric(adj)).values
+    E = eigen(Symmetric(Array(adj))).values
     T(2. / maximum(E)) * normalized_laplacian(adj, T) - I
 end
 
