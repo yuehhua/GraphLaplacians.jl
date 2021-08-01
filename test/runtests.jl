@@ -7,6 +7,7 @@ using Test
 
 tests = [
     "adjmat",
+    "sparse",
     "graphs",
 ]
 
