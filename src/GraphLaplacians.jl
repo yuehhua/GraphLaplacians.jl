@@ -17,7 +17,6 @@ export
     signless_laplacian
 
 include("adjmat.jl")
-include("adjlist.jl")
 include("graphs.jl")
 
 @non_differentiable adjacency_matrix(x...)
