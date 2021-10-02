@@ -71,6 +71,10 @@
             :in   => degs[:in] - adj,
             :both => degs[:both] - adj,
         )
+        norm_laps = Dict(
+            :out  => I - diagm(0=>[1/2, 1/2, 1/4, 1/4])*adj,
+            :in   => I - diagm(0=>[1/5, 1/4, 1/3, 0])*adj,
+        )
         sig_laps = Dict(
             :out  => degs[:out] + adj,
             :in   => degs[:in] + adj,
@@ -103,7 +107,13 @@
             end
         end
 
-        for T in [Float16, Float32, Float64]
+        for T in [Float32, Float64]
+            for dir in [:out, :in]
+                L = normalized_laplacian(adj, T, dir=dir)
+                @test L == T.(norm_laps[dir])
+                @test eltype(L) == T
+            end
+
             for dir in [:out, :in, :both]
                 RW = random_walk_laplacian(adj, T, dir=dir)
                 @test RW == T.(rw_laps[dir])

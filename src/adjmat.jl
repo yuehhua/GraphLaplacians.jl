@@ -78,7 +78,7 @@ function degree_matrix(adj::AbstractMatrix, T::DataType=eltype(adj);
                        dir::Symbol=:out, squared::Bool=false, inverse::Bool=false)
     d = degrees(adj, T, dir=dir)
     squared && (d .= sqrt.(d))
-    inverse && (d .= inv.(d))
+    inverse && (d .= inv.(d); replace!(d, typemax(T)=>zero(T)))
     return Diagonal(T.(d))
 end
 
