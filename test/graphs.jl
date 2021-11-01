@@ -88,49 +88,32 @@
     add_edge!(dgs[:weight], 1, 3, 2); add_edge!(dgs[:weight], 2, 3, 2)
     add_edge!(dgs[:weight], 1, 6, 1); add_edge!(dgs[:weight], 2, 5, -2)
     add_edge!(dgs[:weight], 3, 4, -2); add_edge!(dgs[:weight], 3, 5, -1)
-
-    ugs[:meta] = MetaGraph(ugs[:simple])
-    dgs[:meta] = MetaDiGraph(dgs[:simple])
     
     @testset "simplegraphs" begin
         g = ugs[:simple]
         for T in [Int8, Int16, Int32, Int64, Int128, Float16, Float32, Float64]
-            @test degrees(g, T, dir=:out) == T.(diag(degs[:simple]))
-            @test degree_matrix(g, T, dir=:out) == T.(degs[:simple])
-            @test degree_matrix(g, T, dir=:out) == degree_matrix(adjs[:simple], T, dir=:in)
-            @test degree_matrix(g, T, dir=:out) == degree_matrix(adjs[:simple], T, dir=:both)
-            @test laplacian_matrix(g, T) == T.(laps[:simple])
+            @test GraphLaplacians.degrees(g, T, dir=:out) == T.(diag(degs[:simple]))
+            @test GraphLaplacians.degree_matrix(g, T, dir=:out) == T.(degs[:simple])
+            @test GraphLaplacians.degree_matrix(g, T, dir=:out) == GraphLaplacians.degree_matrix(adjs[:simple], T, dir=:in)
+            @test GraphLaplacians.degree_matrix(g, T, dir=:out) == GraphLaplacians.degree_matrix(adjs[:simple], T, dir=:both)
+            @test Graphs.laplacian_matrix(g, T) == T.(laps[:simple])
         end
         for T in [Float16, Float32, Float64]
-            @test normalized_laplacian(g, T) ≈ T.(norm_laps[:simple])
+            @test GraphLaplacians.normalized_laplacian(g, T) ≈ T.(norm_laps[:simple])
         end
     end
 
     @testset "weightedgraphs" begin
         g = ugs[:weight]
         for T in [Int8, Int16, Int32, Int64, Int128, Float16, Float32, Float64]
-            @test degrees(g, T, dir=:out) == T.(diag(degs[:weight]))
-            @test degree_matrix(g, T, dir=:out) == T.(degs[:weight])
-            @test degree_matrix(g, T, dir=:out) == degree_matrix(adjs[:weight], T, dir=:in)
-            @test degree_matrix(g, T, dir=:out) == degree_matrix(adjs[:weight], T, dir=:both)
-            @test laplacian_matrix(g, T) == T.(laps[:weight])
+            @test GraphLaplacians.degrees(g, T, dir=:out) == T.(diag(degs[:weight]))
+            @test GraphLaplacians.degree_matrix(g, T, dir=:out) == T.(degs[:weight])
+            @test GraphLaplacians.degree_matrix(g, T, dir=:out) == GraphLaplacians.degree_matrix(adjs[:weight], T, dir=:in)
+            @test GraphLaplacians.degree_matrix(g, T, dir=:out) == GraphLaplacians.degree_matrix(adjs[:weight], T, dir=:both)
+            @test Graphs.laplacian_matrix(g, T) == T.(laps[:weight])
         end
         for T in [Float16, Float32, Float64]
-            @test normalized_laplacian(g, T) ≈ T.(norm_laps[:weight])
-        end
-    end
-
-    @testset "metagraphs" begin
-        g = ugs[:meta]
-        for T in [Int8, Int16, Int32, Int64, Int128, Float16, Float32, Float64]
-            @test degrees(g, T, dir=:out) == T.(diag(degs[:simple]))
-            @test degree_matrix(g, T, dir=:out) == T.(degs[:simple])
-            @test degree_matrix(g, T, dir=:out) == degree_matrix(adjs[:simple], T, dir=:in)
-            @test degree_matrix(g, T, dir=:out) == degree_matrix(adjs[:simple], T, dir=:both)
-            @test laplacian_matrix(g, T) == T.(laps[:simple])
-        end
-        for T in [Float16, Float32, Float64]
-            @test normalized_laplacian(g, T) ≈ T.(norm_laps[:simple])
+            @test GraphLaplacians.normalized_laplacian(g, T) ≈ T.(norm_laps[:weight])
         end
     end
 end
