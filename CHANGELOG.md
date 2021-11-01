@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1]
+
+- migrate to Graphs and not export any APIs
+
 ## [0.2.0]
 
 - support normalized Laplacian for directed graph
