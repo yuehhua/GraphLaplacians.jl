@@ -4,31 +4,6 @@ function adjacency_matrix(adj::AbstractMatrix, T::DataType=eltype(adj))
     T.(adj)
 end
 
-"""
-    degrees(g[, T]; dir=:out)
-
-Degree of each vertex. Return a vector which contains the degree of each vertex in graph `g`.
-
-# Arguments
-
-- `g`: should be a adjacency matrix, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
-- `T`: result element type of degree vector; default is the element type of `g` (optional).
-- `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
-
-# Examples
-
-```jldoctest
-julia> using GraphLaplacians
-
-julia> m = [0 1 1; 1 0 0; 1 0 0];
-
-julia> GraphLaplacians.degrees(m)
-3-element Vector{Int64}:
- 2
- 1
- 1
-```
-"""
 function degrees(adj::AbstractMatrix; dir::Symbol=:out)
     if issymmetric(adj)
         d = vec(sum(adj, dims=1))
@@ -56,7 +31,8 @@ The values other than diagonal are zeros.
 
 # Arguments
 
-- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from Graphs)
+    or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
 
@@ -89,13 +65,13 @@ Laplacian matrix of graph `g`.
 
 # Arguments
 
-- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from Graphs)
+    or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
 """
-function laplacian_matrix(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
+Graphs.laplacian_matrix(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out) =
     degree_matrix(adj, T, dir=dir) - SparseMatrixCSC(T.(adj))
-end
 
 """
     normalized_laplacian(g[, T]; dir=:both, selfloop=false)
@@ -104,7 +80,7 @@ Normalized Laplacian matrix of graph `g`.
 
 # Arguments
 
-- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs)
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from Graphs)
     or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `selfloop`: adding self loop while calculating the matrix (optional).
@@ -129,7 +105,7 @@ defined as ``\hat{L} = \frac{2}{\lambda_{max}} L - I`` where ``L`` is the normal
 
 # Arguments
 
-- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs)
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from Graphs)
     or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 """
@@ -146,7 +122,8 @@ Random walk normalized Laplacian matrix of graph `g`.
 
 # Arguments
 
-- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from Graphs)
+    or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
 """
@@ -165,10 +142,10 @@ Signless Laplacian matrix of graph `g`.
 
 # Arguments
 
-- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from LightGraphs) or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
+- `g`: should be a adjacency matrix, `FeaturedGraph`, `SimpleGraph`, `SimpleDiGraph` (from Graphs)
+    or `SimpleWeightedGraph`, `SimpleWeightedDiGraph` (from SimpleWeightedGraphs).
 - `T`: result element type of degree vector; default is the element type of `g` (optional).
 - `dir`: direction of degree; should be `:in`, `:out`, or `:both` (optional).
 """
-function signless_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out)
+signless_laplacian(adj::AbstractMatrix, T::DataType=eltype(adj); dir::Symbol=:out) =
     degree_matrix(adj, T, dir=dir) + SparseMatrixCSC(T.(adj))
-end

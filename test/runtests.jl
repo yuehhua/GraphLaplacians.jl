@@ -1,8 +1,7 @@
 using GraphLaplacians
 using LinearAlgebra
-using LightGraphs: SimpleGraph, SimpleDiGraph, add_edge!
-using SimpleWeightedGraphs: SimpleWeightedGraph, SimpleWeightedDiGraph, add_edge!
-using MetaGraphs: MetaGraph, MetaDiGraph
+using Graphs
+using SimpleWeightedGraphs
 using Test
 
 tests = [

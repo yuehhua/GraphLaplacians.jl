@@ -28,31 +28,31 @@ using SparseArrays
                   -0.5 0 -0.5 1]
 
         for T in [Int8, Int16, Int32, Int64, Int128, Float16, Float32, Float64]
-            D = degree_matrix(sparse(adj), T, dir=:out)
+            D = GraphLaplacians.degree_matrix(sparse(adj), T, dir=:out)
             @test D == T.(deg)
-            @test D == degree_matrix(sparse(adj), T, dir=:in)
-            @test D == degree_matrix(sparse(adj), T, dir=:both)
+            @test D == GraphLaplacians.degree_matrix(sparse(adj), T, dir=:in)
+            @test D == GraphLaplacians.degree_matrix(sparse(adj), T, dir=:both)
             @test eltype(D) == T
 
-            L = laplacian_matrix(sparse(adj), T)
+            L = Graphs.laplacian_matrix(sparse(adj), T)
             @test L == T.(lap)
             @test eltype(L) == T
 
-            SL = signless_laplacian(sparse(adj), T)
+            SL = GraphLaplacians.signless_laplacian(sparse(adj), T)
             @test SL == T.(adj + deg)
             @test eltype(SL) == T
         end
 
         for T in [Float16, Float32, Float64]
-            NL = normalized_laplacian(sparse(adj), T)
+            NL = GraphLaplacians.normalized_laplacian(sparse(adj), T)
             @test NL ≈ T.(norm_lap)
             @test eltype(NL) == T
 
-            SL = scaled_laplacian(sparse(adj), T)
+            SL = GraphLaplacians.scaled_laplacian(sparse(adj), T)
             @test SL ≈ T.(scaled_lap)
             @test eltype(SL) == T
             
-            RW = random_walk_laplacian(sparse(adj), T)
+            RW = GraphLaplacians.random_walk_laplacian(sparse(adj), T)
             @test RW == T.(rw_lap)
             @test eltype(RW) == T
         end
@@ -86,20 +86,20 @@ using SparseArrays
 
         for T in [Int8, Int16, Int32, Int64, Int128, Float16, Float32, Float64]
             for dir in [:out, :in, :both]
-                D = degree_matrix(sparse(adj), T, dir=dir)
+                D = GraphLaplacians.degree_matrix(sparse(adj), T, dir=dir)
                 @test D == T.(degs[dir])
                 @test eltype(D) == T
             end
-            @test_throws DomainError degree_matrix(adj, dir=:other)
+            @test_throws DomainError GraphLaplacians.degree_matrix(adj, dir=:other)
 
             for dir in [:out, :in, :both]
-                L = laplacian_matrix(sparse(adj), T, dir=dir)
+                L = Graphs.laplacian_matrix(sparse(adj), T, dir=dir)
                 @test L == T.(laps[dir])
                 @test eltype(L) == T
             end
 
             for dir in [:out, :in, :both]
-                SL = signless_laplacian(sparse(adj), T, dir=dir)
+                SL = GraphLaplacians.signless_laplacian(sparse(adj), T, dir=dir)
                 @test SL == T.(sig_laps[dir])
                 @test eltype(SL) == T
             end
@@ -107,7 +107,7 @@ using SparseArrays
 
         for T in [Float16, Float32, Float64]
             for dir in [:out, :in, :both]
-                RW = random_walk_laplacian(sparse(adj), T, dir=dir)
+                RW = GraphLaplacians.random_walk_laplacian(sparse(adj), T, dir=dir)
                 @test RW == T.(rw_laps[dir])
                 @test eltype(RW) == T
             end
